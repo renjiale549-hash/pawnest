@@ -668,3 +668,27 @@ Testing:
 Next step:
 
 - Check `renjiale549@gmail.com` inbox and spam folder for the `New PawNest inquiry: Resend Live Test` email.
+
+### 2026-06-28 Clean inquiry email template
+
+Files changed:
+
+- `core/views.py`
+- `core/tests.py`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Removed the legacy sourcing fields section from normal website inquiry notification emails.
+- Kept legacy sourcing fields only for payloads submitted through the legacy contract form compatibility path.
+
+Testing:
+
+- Added assertions that new website inquiry emails do not include `Legacy sourcing fields`.
+- Added assertions that legacy contract submissions still include the legacy field section.
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 14 tests passed.
+
+Next step:
+
+- Wait for Render to redeploy, then submit a new inquiry and confirm the email only shows the modern inquiry fields.

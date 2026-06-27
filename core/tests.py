@@ -78,6 +78,7 @@ class ApiTests(TestCase):
         self.assertEqual(mail.outbox[0].to, ['renjiale549@gmail.com'])
         self.assertIn('Mia', mail.outbox[0].subject)
         self.assertIn('Need a feeding set sample.', mail.outbox[0].body)
+        self.assertNotIn('Legacy sourcing fields', mail.outbox[0].body)
 
     def test_contract_submission_rejects_invalid_email(self):
         response = self.client.post(
@@ -124,6 +125,7 @@ class ApiTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertTrue(response.json()['email_sent'])
+        self.assertIn('Legacy sourcing fields', mail.outbox[0].body)
 
     @override_settings(
         EMAIL_BACKEND='core.tests.FailingEmailBackend',

@@ -83,29 +83,32 @@ def clean_email(payload, field='email'):
 def build_contract_email(contract):
     subject_name = contract.name or contract.contact_name
     subject = f'New PawNest inquiry: {subject_name or "Website inquiry"}'
-    message = '\n'.join(
-        [
-            'A new inquiry was submitted from the PawNest website.',
-            '',
-            f'Name: {contract.name or contract.contact_name}',
-            f'Email: {contract.email or "-"}',
-            f'WhatsApp / phone: {contract.phone}',
-            f'Country: {contract.country or "-"}',
-            f'Interested products: {contract.interested_products or "-"}',
-            '',
-            'Message:',
-            contract.message or contract.requirement,
-            '',
-            'Legacy sourcing fields:',
-            f'Company / brand: {contract.company_brand or "-"}',
-            f'Project type: {contract.project_type or "-"}',
-            f'Estimated quantity: {contract.estimated_quantity or "-"}',
-            f'Delivery city: {contract.delivery_city or "-"}',
-            f'Budget range: {contract.budget_range or "-"}',
-            '',
-            f'Admin record: /admin/core/contract/{contract.id}/change/',
-        ]
-    )
+    lines = [
+        'A new inquiry was submitted from the PawNest website.',
+        '',
+        f'Name: {contract.name or contract.contact_name}',
+        f'Email: {contract.email or "-"}',
+        f'WhatsApp / phone: {contract.phone}',
+        f'Country: {contract.country or "-"}',
+        f'Interested products: {contract.interested_products or "-"}',
+        '',
+        'Message:',
+        contract.message or contract.requirement,
+    ]
+    if contract.source == 'legacy-contract-form':
+        lines.extend(
+            [
+                '',
+                'Legacy sourcing fields:',
+                f'Company / brand: {contract.company_brand or "-"}',
+                f'Project type: {contract.project_type or "-"}',
+                f'Estimated quantity: {contract.estimated_quantity or "-"}',
+                f'Delivery city: {contract.delivery_city or "-"}',
+                f'Budget range: {contract.budget_range or "-"}',
+            ]
+        )
+    lines.extend(['', f'Admin record: /admin/core/contract/{contract.id}/change/'])
+    message = '\n'.join(lines)
     return subject, message
 
 
