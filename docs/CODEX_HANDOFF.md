@@ -692,3 +692,22 @@ Testing:
 Next step:
 
 - Wait for Render to redeploy, then submit a new inquiry and confirm the email only shows the modern inquiry fields.
+
+### 2026-06-28 Clean email template live verification
+
+Files changed:
+
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Verified the cleaned inquiry email template was deployed to Render.
+
+Testing:
+
+- Submitted live inquiry `Clean Email Test` to `https://pawnest-api.onrender.com/api/contracts/`.
+- API returned `id=8` and `email_sent=true`.
+
+Next step:
+
+- Check the latest `Clean Email Test` message in Gmail and confirm it no longer contains `Legacy sourcing fields`.
