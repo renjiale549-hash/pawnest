@@ -508,3 +508,29 @@ Testing:
 Next step:
 
 - Wait for Render to redeploy from `main`, then refresh Django Admin and confirm the left menu and list columns show Chinese labels.
+
+### 2026-06-28 Backend root redirect fix
+
+Files changed:
+
+- `core/views.py`
+- `config/settings.py`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Added `FRONTEND_SITE_URL`, defaulting to `https://renjiale549-hash.github.io/pawnest/`.
+- Updated the backend root view so Render redirects to the GitHub Pages frontend when `frontend/dist/index.html` is not present.
+- Kept local Django frontend serving behavior intact when `frontend/dist/index.html` exists.
+
+Testing:
+
+- Verified the live Render API still returns HTTP 200 for `/api/products/`.
+- Verified local authenticated Django Admin pages return HTTP 200 for `/admin/`, `/admin/core/product/`, `/admin/core/contract/`, and `/admin/core/order/`.
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 11 tests passed.
+- Verified the backend root returns HTTP 302 to GitHub Pages when the frontend build file is missing.
+
+Next step:
+
+- Wait for Render to deploy this commit, then refresh `https://pawnest-api.onrender.com/`; it should redirect to GitHub Pages instead of showing Server Error 500.

@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -20,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 
 def frontend(request):
+    frontend_index = settings.FRONTEND_DIST_DIR / 'index.html'
+    if not frontend_index.exists() and settings.FRONTEND_SITE_URL:
+        return redirect(settings.FRONTEND_SITE_URL)
     return render(request, 'index.html')
 
 
