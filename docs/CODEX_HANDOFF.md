@@ -356,6 +356,40 @@ Next step:
 
 - Copy `.env.example` to `.env`, fill in the real sender email and app password, restart Django, then run `send_test_inquiry_email` again to confirm real SMTP delivery.
 
+### 2026-06-28 Frontend display smoke test
+
+Files changed:
+
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Started the local Django development server at `http://127.0.0.1:8000/`.
+- Ran a Playwright/Edge visual smoke test for desktop `1440x1000` and mobile `390x844`.
+- Checked homepage, product list, product detail, and contact page navigation.
+- Submitted a test contact inquiry from the browser with contact name `Display Test`.
+
+Testing:
+
+- Homepage returned HTTP 200.
+- Desktop and mobile pages rendered with no console errors.
+- No horizontal overflow was detected on desktop or mobile.
+- All tested remote images loaded successfully.
+- Product list rendered 4 cards.
+- Collection area rendered 4 cards.
+- Contact inquiry submission returned success and created a database record.
+- Default console email backend printed the inquiry notification to the Django server terminal.
+
+Notes:
+
+- Current frontend is now an English 6-nav version: Home, Products, Factory, Custom, Cart, Contact.
+- This differs from the earlier 5 Chinese nav requirement: 首页, 产品, 工厂, 定制, 联系.
+- Current contact form uses simplified inquiry fields and the backend maps them into the existing `Contract` model.
+
+Next step:
+
+- Decide whether to keep the English ecommerce/cart direction or restore the earlier five-button Chinese navigation requirement.
+
 ### 2026-06-27 GitHub Pages and Render backend prep
 
 Files changed:
@@ -534,3 +568,25 @@ Testing:
 Next step:
 
 - Wait for Render to deploy this commit, then refresh `https://pawnest-api.onrender.com/`; it should redirect to GitHub Pages instead of showing Server Error 500.
+
+### 2026-06-28 Simple UI iframe fix
+
+Files changed:
+
+- `config/settings.py`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Set `X_FRAME_OPTIONS` to `SAMEORIGIN` by default so Django Admin pages can be embedded by Simple UI's same-origin iframe tabs.
+- Kept iframe protection for other origins; this does not allow third-party websites to embed the admin.
+
+Testing:
+
+- Verified authenticated local `/admin/core/product/` returns HTTP 200 with `X-Frame-Options: SAMEORIGIN`.
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 11 tests passed.
+
+Next step:
+
+- Wait for Render to redeploy, then refresh Django Admin and reopen the product, inquiry, or order list tabs.
