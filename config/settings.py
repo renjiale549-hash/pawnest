@@ -189,14 +189,14 @@ SEND_CUSTOMER_ORDER_EMAIL = env_bool('SEND_CUSTOMER_ORDER_EMAIL', True)
 
 SIMPLEUI_CONFIG = {
     'system_keep': True,
-    'menu_display': ['Products', 'Inquiries', 'Orders', 'Newsletter', 'Authentication'],
+    'menu_display': ['商品管理', '询盘管理', '订单管理', '邮件订阅', '认证和授权'],
     'menus': [
         {
-            'name': 'Products',
+            'name': '商品管理',
             'icon': 'fas fa-box-open',
             'models': [
                 {
-                    'name': 'Product list',
+                    'name': '商品列表',
                     'icon': 'fas fa-list',
                     'url': '/admin/core/product/',
                     'permission': 'core.view_product',
@@ -204,11 +204,11 @@ SIMPLEUI_CONFIG = {
             ],
         },
         {
-            'name': 'Inquiries',
+            'name': '询盘管理',
             'icon': 'fas fa-envelope-open-text',
             'models': [
                 {
-                    'name': 'Inquiry list',
+                    'name': '询盘列表',
                     'icon': 'fas fa-list',
                     'url': '/admin/core/contract/',
                     'permission': 'core.view_contract',
@@ -216,11 +216,11 @@ SIMPLEUI_CONFIG = {
             ],
         },
         {
-            'name': 'Orders',
+            'name': '订单管理',
             'icon': 'fas fa-shopping-cart',
             'models': [
                 {
-                    'name': 'Order list',
+                    'name': '订单列表',
                     'icon': 'fas fa-list',
                     'url': '/admin/core/order/',
                     'permission': 'core.view_order',
@@ -228,11 +228,11 @@ SIMPLEUI_CONFIG = {
             ],
         },
         {
-            'name': 'Newsletter',
+            'name': '邮件订阅',
             'icon': 'fas fa-paper-plane',
             'models': [
                 {
-                    'name': 'Subscribers',
+                    'name': '订阅用户',
                     'icon': 'fas fa-list',
                     'url': '/admin/core/newslettersubscriber/',
                     'permission': 'core.view_newslettersubscriber',

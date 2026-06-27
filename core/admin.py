@@ -2,9 +2,9 @@ from django.contrib import admin
 
 from .models import Contract, NewsletterSubscriber, Order, OrderItem, Product
 
-admin.site.site_header = 'PawNest Admin'
-admin.site.site_title = 'PawNest Admin'
-admin.site.index_title = 'Store operations'
+admin.site.site_header = 'PawNest 后台管理'
+admin.site.site_title = 'PawNest 后台'
+admin.site.index_title = '运营管理'
 
 
 @admin.register(Contract)
@@ -43,9 +43,9 @@ class ContractAdmin(admin.ModelAdmin):
     ordering = ('-created_at', '-id')
     list_per_page = 20
 
-    @admin.display(description='Name')
+    @admin.display(description='姓名')
     def display_name(self, obj):
-        return obj.name or obj.contact_name or 'Inquiry'
+        return obj.name or obj.contact_name or '询盘'
 
 
 @admin.register(Product)

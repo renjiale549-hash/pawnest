@@ -482,3 +482,29 @@ Testing:
 Next step:
 
 - Log in to Django Admin and confirm the records named `Codex Live Inquiry Test` and `Codex Live Order Test` are visible in the inquiry and order lists.
+
+### 2026-06-28 Restore Chinese Django Admin labels
+
+Files changed:
+
+- `core/models.py`
+- `core/admin.py`
+- `config/settings.py`
+- `core/migrations/0006_alter_contract_options_and_more.py`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Restored Chinese labels for Django Admin site titles, model names, field names, order status choices, and Simple UI menu groups.
+- Kept existing API field names unchanged, so frontend inquiry and order submissions continue to use the same JSON payloads.
+- Added a Django migration for the admin display metadata changes.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py makemigrations core`; migration `0006_alter_contract_options_and_more.py` was generated.
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 11 tests passed.
+
+Next step:
+
+- Wait for Render to redeploy from `main`, then refresh Django Admin and confirm the left menu and list columns show Chinese labels.
