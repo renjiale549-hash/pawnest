@@ -393,3 +393,23 @@ Testing:
 Next step:
 
 - Deploy the backend from `render.yaml` on Render, copy the Render backend URL, then set GitHub repository variable `VITE_API_BASE_URL` to that URL and rerun the GitHub Pages workflow.
+
+### 2026-06-27 Render free tier Blueprint fix
+
+Files changed:
+
+- `render.yaml`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Removed `preDeployCommand` from the Render Blueprint because Render free tier web services do not support it.
+- Moved `python manage.py migrate --noinput` into the web service `startCommand` before Gunicorn starts.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+
+Next step:
+
+- Refresh the Render Blueprint page and create the Blueprint again with `Blueprint Name` set to `pawnest`, `Branch` set to `main`, and `Blueprint Path` left blank or set to `render.yaml`.
