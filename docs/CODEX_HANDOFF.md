@@ -355,3 +355,41 @@ Testing:
 Next step:
 
 - Copy `.env.example` to `.env`, fill in the real sender email and app password, restart Django, then run `send_test_inquiry_email` again to confirm real SMTP delivery.
+
+### 2026-06-27 GitHub Pages and Render backend prep
+
+Files changed:
+
+- `config/settings.py`
+- `requirements.txt`
+- `.env.example`
+- `frontend/.env.example`
+- `frontend/src/App.vue`
+- `.github/workflows/deploy.yml`
+- `build.sh`
+- `render.yaml`
+- `docs/RENDER_BACKEND.md`
+- `README.md`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Added CORS and WhiteNoise production support for a separated GitHub Pages frontend and Django backend.
+- Added Render Blueprint configuration for a free/low-cost Django web service plus PostgreSQL database.
+- Added backend build script for installing Python dependencies and running `collectstatic`.
+- Added frontend `VITE_API_BASE_URL` support so the GitHub Pages site can call the deployed Django API.
+- Updated GitHub Actions so Pages builds can receive `VITE_API_BASE_URL` from repository Actions variables.
+- Added Render backend deployment documentation and linked it from the README.
+- Kept local development defaults working without requiring a remote API URL.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe -m pip install django-cors-headers==4.7.0 whitenoise==6.9.0`; dependencies installed successfully.
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 11 tests passed.
+- Ran `.venv\Scripts\python.exe manage.py collectstatic --noinput --verbosity 0`; command completed successfully.
+- Ran `npm run build` in `frontend`; Vite production build completed successfully.
+
+Next step:
+
+- Deploy the backend from `render.yaml` on Render, copy the Render backend URL, then set GitHub repository variable `VITE_API_BASE_URL` to that URL and rerun the GitHub Pages workflow.

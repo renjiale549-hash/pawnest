@@ -1,0 +1,47 @@
+databases:
+  - name: pawnest-db
+    databaseName: pawnest
+    user: pawnest_user
+    plan: free
+
+services:
+  - type: web
+    name: pawnest-api
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    preDeployCommand: python manage.py migrate
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://renjiale549-hash.github.io
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://renjiale549-hash.github.io
+      - key: SESSION_COOKIE_SECURE
+        value: true
+      - key: CSRF_COOKIE_SECURE
+        value: true
+      - key: SECURE_SSL_REDIRECT
+        value: false
+      - key: SECURE_HSTS_SECONDS
+        value: 0
+      - key: DJANGO_EMAIL_BACKEND
+        value: django.core.mail.backends.console.EmailBackend
+      - key: CONTRACT_NOTIFICATION_EMAIL
+        value: renjiale549@gmail.com
+      - key: ORDER_NOTIFICATION_EMAIL
+        value: renjiale549@gmail.com
+      - key: SEND_CUSTOMER_ORDER_EMAIL
+        value: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pawnest-db
+          property: connectionString

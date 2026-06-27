@@ -10,6 +10,12 @@ const pages = [
   { id: 'contact', label: 'Contact' },
 ]
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+
+function apiUrl(path) {
+  return API_BASE_URL ? `${API_BASE_URL}${path}` : path
+}
+
 const fallbackProducts = [
   {
     id: 'pino-feeder-set',
@@ -157,7 +163,7 @@ function normalizeProduct(product) {
 async function loadProducts() {
   productsStatus.value = ''
   try {
-    const response = await fetch('/api/products/')
+    const response = await fetch(apiUrl('/api/products/'))
     const result = await response.json()
     if (!response.ok) {
       throw new Error(result.message || 'Could not load products.')
@@ -222,7 +228,7 @@ async function subscribeNewsletter() {
   }
 
   try {
-    const response = await fetch('/api/newsletter/', {
+    const response = await fetch(apiUrl('/api/newsletter/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: newsletterEmail.value, source: 'frontend-newsletter-card' }),
@@ -259,7 +265,7 @@ async function submitInquiry() {
 
   isSubmittingInquiry.value = true
   try {
-    const response = await fetch('/api/contracts/', {
+    const response = await fetch(apiUrl('/api/contracts/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...inquiryForm.value, source: 'website-inquiry-page' }),
@@ -302,7 +308,7 @@ async function submitOrder() {
 
   isSubmittingOrder.value = true
   try {
-    const response = await fetch('/api/orders/', {
+    const response = await fetch(apiUrl('/api/orders/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

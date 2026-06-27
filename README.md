@@ -37,3 +37,5 @@ Useful checks:
 Use `docs/DEPLOYMENT.md` for the VPS + Nginx + Gunicorn + PostgreSQL deployment plan.
 
 For a free frontend-only preview on GitHub Pages, use `docs/GITHUB_PAGES.md`.
+
+For the GitHub Pages frontend plus Render backend path, use `docs/RENDER_BACKEND.md`.
