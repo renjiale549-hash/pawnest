@@ -56,17 +56,29 @@ If Render gives a slightly different URL, use that exact URL.
 
 ## Create Admin User On Render
 
-After deployment, open the Render service shell and run:
+For the first version, create the Django Admin user through Render environment variables.
 
-```bash
-python manage.py createsuperuser
+In the `pawnest-api` service:
+
+1. Open `Environment`.
+2. Add these variables:
+
+```text
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=your-email@example.com
+DJANGO_SUPERUSER_PASSWORD=your-strong-password
 ```
 
-Then open:
+3. Click `Save Changes`.
+4. Wait for Render to redeploy, or click `Manual Deploy`.
+5. After the deploy is live, open:
 
 ```text
 https://YOUR_RENDER_BACKEND/admin/
 ```
+
+6. Log in with the username and password from the variables above.
+7. After login works, remove `DJANGO_SUPERUSER_PASSWORD` from Render Environment and redeploy. Keeping the username and email variables is harmless; do not keep the password stored longer than needed.
 
 ## Connect GitHub Pages To Render Backend
 

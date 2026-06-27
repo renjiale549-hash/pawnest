@@ -435,3 +435,26 @@ Testing:
 Next step:
 
 - Create a Django superuser on Render, then submit one live inquiry and one live order from GitHub Pages and confirm both appear in Django Admin.
+
+### 2026-06-27 Render admin creation helper
+
+Files changed:
+
+- `start.sh`
+- `render.yaml`
+- `docs/RENDER_BACKEND.md`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Added `start.sh` for Render startup: run migrations, optionally create a Django superuser from environment variables, then start Gunicorn.
+- Updated Render start command to `bash start.sh`.
+- Documented the environment-variable flow for creating the first Django Admin account without needing Render Shell.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+
+Next step:
+
+- In Render `pawnest-api` Environment, add `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL`, and `DJANGO_SUPERUSER_PASSWORD`, save changes, wait for redeploy, then log in to `/admin/`.
