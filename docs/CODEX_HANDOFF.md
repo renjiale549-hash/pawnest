@@ -711,3 +711,26 @@ Testing:
 Next step:
 
 - Check the latest `Clean Email Test` message in Gmail and confirm it no longer contains `Legacy sourcing fields`.
+
+### 2026-06-28 Remove legacy sourcing fields from all inquiry emails
+
+Files changed:
+
+- `core/views.py`
+- `core/tests.py`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Removed the legacy sourcing field section from the inquiry email template entirely.
+- Kept the legacy API payload compatibility intact so older form submissions still save successfully.
+- Updated tests to assert that even legacy-compatible submissions do not include `Legacy sourcing fields`, `Company / brand:`, or `Budget range:` in notification emails.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 14 tests passed.
+
+Next step:
+
+- Push to GitHub, wait for Render to redeploy, then submit a new inquiry and check the newest Gmail message.

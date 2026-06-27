@@ -104,7 +104,7 @@ class ApiTests(TestCase):
         CONTRACT_NOTIFICATION_EMAIL='renjiale549@gmail.com',
         DEFAULT_FROM_EMAIL='PawNest <test@example.com>',
     )
-    def test_legacy_contract_submission_still_works(self):
+    def test_legacy_contract_submission_still_works_without_legacy_email_fields(self):
         response = self.client.post(
             '/api/contracts/',
             data=json.dumps(
@@ -125,7 +125,9 @@ class ApiTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertTrue(response.json()['email_sent'])
-        self.assertIn('Legacy sourcing fields', mail.outbox[0].body)
+        self.assertNotIn('Legacy sourcing fields', mail.outbox[0].body)
+        self.assertNotIn('Company / brand:', mail.outbox[0].body)
+        self.assertNotIn('Budget range:', mail.outbox[0].body)
 
     @override_settings(
         EMAIL_BACKEND='core.tests.FailingEmailBackend',

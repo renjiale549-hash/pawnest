@@ -95,18 +95,6 @@ def build_contract_email(contract):
         'Message:',
         contract.message or contract.requirement,
     ]
-    if contract.source == 'legacy-contract-form':
-        lines.extend(
-            [
-                '',
-                'Legacy sourcing fields:',
-                f'Company / brand: {contract.company_brand or "-"}',
-                f'Project type: {contract.project_type or "-"}',
-                f'Estimated quantity: {contract.estimated_quantity or "-"}',
-                f'Delivery city: {contract.delivery_city or "-"}',
-                f'Budget range: {contract.budget_range or "-"}',
-            ]
-        )
     lines.extend(['', f'Admin record: /admin/core/contract/{contract.id}/change/'])
     message = '\n'.join(lines)
     return subject, message
