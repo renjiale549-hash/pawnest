@@ -619,3 +619,32 @@ Testing:
 Next step:
 
 - Configure Render `pawnest-api` environment variables for real SMTP, then submit a live inquiry and confirm the notification arrives in the receiving mailbox.
+
+### 2026-06-28 Resend API email support
+
+Files changed:
+
+- `config/settings.py`
+- `core/views.py`
+- `core/tests.py`
+- `.env.example`
+- `docs/RENDER_BACKEND.md`
+- `docs/RESEND_SETUP.md`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Added `EMAIL_DELIVERY_PROVIDER=resend` support so Render can send email through the Resend HTTPS API instead of blocked SMTP ports.
+- Added `RESEND_API_KEY` and `RESEND_FROM_EMAIL` settings.
+- Kept Django SMTP/email backend support as a fallback for VPS or paid hosting that allows SMTP.
+- Updated inquiry and order notification delivery to share the same provider-aware sending helper.
+- Added Resend-specific tests and setup documentation.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 14 tests passed.
+
+Next step:
+
+- Create a Resend API key, add the Render environment variables from `docs/RESEND_SETUP.md`, deploy, then submit a live inquiry and confirm `email_sent=true`.

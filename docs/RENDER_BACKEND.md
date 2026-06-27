@@ -116,7 +116,34 @@ After this, the GitHub Pages frontend will call the Render backend for:
 
 ## SMTP Variables
 
-In Render service environment variables, replace console email with real SMTP when ready:
+Render free web services can block outbound SMTP ports. Prefer Resend over HTTPS for inquiry and order notification email.
+
+In the `pawnest-api` service environment variables, add:
+
+```text
+EMAIL_DELIVERY_PROVIDER=resend
+RESEND_API_KEY=your-resend-api-key
+RESEND_FROM_EMAIL=PawNest <onboarding@resend.dev>
+CONTRACT_NOTIFICATION_EMAIL=renjiale549@gmail.com
+ORDER_NOTIFICATION_EMAIL=renjiale549@gmail.com
+SEND_CUSTOMER_ORDER_EMAIL=false
+```
+
+For the first test without a custom domain, use Resend's test sender:
+
+```text
+RESEND_FROM_EMAIL=PawNest <onboarding@resend.dev>
+```
+
+After adding a verified domain in Resend, change it to your own sender address, for example:
+
+```text
+RESEND_FROM_EMAIL=PawNest <hello@yourdomain.com>
+```
+
+Do not put the real Resend API key in GitHub code.
+
+The old SMTP configuration is still supported for VPS or paid hosting that allows SMTP:
 
 ```text
 DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
@@ -131,8 +158,6 @@ CONTRACT_NOTIFICATION_EMAIL=renjiale549@gmail.com
 ORDER_NOTIFICATION_EMAIL=renjiale549@gmail.com
 SEND_CUSTOMER_ORDER_EMAIL=true
 ```
-
-Do not put real SMTP passwords in GitHub code.
 
 For Gmail:
 

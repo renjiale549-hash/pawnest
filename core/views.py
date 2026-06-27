@@ -1,6 +1,8 @@
 import json
 import logging
 import re
+import urllib.error
+import urllib.request
 from decimal import Decimal
 
 from django.conf import settings
@@ -18,6 +20,7 @@ from .models import Contract, NewsletterSubscriber, Order, OrderItem, Product
 
 logger = logging.getLogger(__name__)
 CONSOLE_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+RESEND_EMAILS_API_URL = 'https://api.resend.com/emails'
 
 
 def frontend(request):
@@ -106,16 +109,45 @@ def build_contract_email(contract):
     return subject, message
 
 
-def send_contract_notification(contract):
-    recipient = getattr(settings, 'CONTRACT_NOTIFICATION_EMAIL', '')
-    if not recipient:
-        logger.warning('Contract notification skipped because CONTRACT_NOTIFICATION_EMAIL is empty.')
-        return False
-    if getattr(settings, 'EMAIL_BACKEND', '') == CONSOLE_EMAIL_BACKEND:
-        logger.warning('Contract notification skipped because console email backend does not send real email.')
+def send_resend_email(subject, message, recipient):
+    api_key = getattr(settings, 'RESEND_API_KEY', '')
+    if not api_key:
+        logger.warning('Resend email skipped because RESEND_API_KEY is empty.')
         return False
 
-    subject, message = build_contract_email(contract)
+    payload = {
+        'from': getattr(settings, 'RESEND_FROM_EMAIL', settings.DEFAULT_FROM_EMAIL),
+        'to': [recipient],
+        'subject': subject,
+        'text': message,
+    }
+    request = urllib.request.Request(
+        RESEND_EMAILS_API_URL,
+        data=json.dumps(payload).encode('utf-8'),
+        headers={
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json',
+            'User-Agent': 'pawnest-django/1.0',
+        },
+        method='POST',
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=getattr(settings, 'EMAIL_TIMEOUT', 10)) as response:
+            return 200 <= response.status < 300
+    except urllib.error.HTTPError as error:
+        body = error.read().decode('utf-8', errors='replace')
+        logger.error('Resend email failed with HTTP %s: %s', error.code, body)
+        raise
+
+
+def send_notification_email(subject, message, recipient):
+    if getattr(settings, 'EMAIL_DELIVERY_PROVIDER', 'django') == 'resend':
+        return send_resend_email(subject, message, recipient)
+
+    if getattr(settings, 'EMAIL_BACKEND', '') == CONSOLE_EMAIL_BACKEND:
+        logger.warning('Email skipped because console email backend does not send real email.')
+        return False
+
     send_mail(
         subject=subject,
         message=message,
@@ -124,6 +156,16 @@ def send_contract_notification(contract):
         fail_silently=False,
     )
     return True
+
+
+def send_contract_notification(contract):
+    recipient = getattr(settings, 'CONTRACT_NOTIFICATION_EMAIL', '')
+    if not recipient:
+        logger.warning('Contract notification skipped because CONTRACT_NOTIFICATION_EMAIL is empty.')
+        return False
+
+    subject, message = build_contract_email(contract)
+    return send_notification_email(subject, message, recipient)
 
 
 def build_order_number():
@@ -191,23 +233,11 @@ def send_order_notifications(order):
         return False
 
     subject, message = build_order_admin_email(order)
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[recipient],
-        fail_silently=False,
-    )
+    send_notification_email(subject, message, recipient)
 
     if getattr(settings, 'SEND_CUSTOMER_ORDER_EMAIL', True):
         customer_subject, customer_message = build_order_customer_email(order)
-        send_mail(
-            subject=customer_subject,
-            message=customer_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[order.email],
-            fail_silently=False,
-        )
+        send_notification_email(customer_subject, customer_message, order.email)
 
     return True
 

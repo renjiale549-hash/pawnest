@@ -1,4 +1,5 @@
 import json
+from unittest.mock import Mock, patch
 
 from django.core import mail
 from django.core.mail.backends.base import BaseEmailBackend
@@ -170,6 +171,69 @@ class ApiTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Contract.objects.count(), 1)
+        self.assertFalse(response.json()['email_sent'])
+
+    @override_settings(
+        EMAIL_DELIVERY_PROVIDER='resend',
+        RESEND_API_KEY='re_test_key',
+        RESEND_FROM_EMAIL='PawNest <onboarding@resend.dev>',
+        CONTRACT_NOTIFICATION_EMAIL='renjiale549@gmail.com',
+    )
+    @patch('core.views.urllib.request.urlopen')
+    def test_contract_submission_sends_email_with_resend(self, mock_urlopen):
+        response_context = Mock()
+        response_context.status = 200
+        mock_urlopen.return_value.__enter__.return_value = response_context
+
+        response = self.client.post(
+            '/api/contracts/',
+            data=json.dumps(
+                {
+                    'name': 'Mia',
+                    'email': 'mia@example.com',
+                    'phone': '+1 555 000 0000',
+                    'country': 'United States',
+                    'interested_products': 'Pino Feeder Set',
+                    'message': 'Need a feeding set sample.',
+                }
+            ),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.json()['email_sent'])
+        self.assertEqual(mock_urlopen.call_count, 1)
+        request = mock_urlopen.call_args.args[0]
+        self.assertEqual(request.get_method(), 'POST')
+        self.assertEqual(request.headers['Authorization'], 'Bearer re_test_key')
+        body = json.loads(request.data.decode('utf-8'))
+        self.assertEqual(body['to'], ['renjiale549@gmail.com'])
+        self.assertEqual(body['from'], 'PawNest <onboarding@resend.dev>')
+        self.assertIn('Mia', body['subject'])
+        self.assertIn('Need a feeding set sample.', body['text'])
+
+    @override_settings(
+        EMAIL_DELIVERY_PROVIDER='resend',
+        RESEND_API_KEY='',
+        CONTRACT_NOTIFICATION_EMAIL='renjiale549@gmail.com',
+    )
+    def test_contract_submission_resend_without_api_key_is_not_marked_sent(self):
+        response = self.client.post(
+            '/api/contracts/',
+            data=json.dumps(
+                {
+                    'name': 'Mia',
+                    'email': 'mia@example.com',
+                    'phone': '+1 555 000 0000',
+                    'country': 'United States',
+                    'interested_products': 'Pino Feeder Set',
+                    'message': 'Need a feeding set sample.',
+                }
+            ),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 201)
         self.assertFalse(response.json()['email_sent'])
 
     @override_settings(
