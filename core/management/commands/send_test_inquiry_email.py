@@ -11,14 +11,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         contract = SimpleNamespace(
             id='test',
+            name='Test Buyer',
+            email='buyer@example.com',
+            country='United States',
+            interested_products='Pino Feeder Set',
+            message='This is a test inquiry email from the Django management command.',
             contact_name='Test Buyer',
-            phone='+1 555 000 0000',
             company_brand='PawNest SMTP Test',
-            project_type='Pet supplies sourcing',
-            estimated_quantity='500 pcs',
+            project_type='Website inquiry',
+            estimated_quantity='1 sample',
             delivery_city='Los Angeles',
-            budget_range='$1,000 - $3,000',
+            budget_range='$100 - $300',
             requirement='This is a test inquiry email from the Django management command.',
+            phone='+1 555 000 0000',
         )
 
         try:

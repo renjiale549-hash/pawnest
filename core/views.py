@@ -17,6 +17,7 @@ from django.views.decorators.http import require_http_methods
 from .models import Contract, NewsletterSubscriber, Order, OrderItem, Product
 
 logger = logging.getLogger(__name__)
+CONSOLE_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 def frontend(request):
@@ -109,6 +110,9 @@ def send_contract_notification(contract):
     recipient = getattr(settings, 'CONTRACT_NOTIFICATION_EMAIL', '')
     if not recipient:
         logger.warning('Contract notification skipped because CONTRACT_NOTIFICATION_EMAIL is empty.')
+        return False
+    if getattr(settings, 'EMAIL_BACKEND', '') == CONSOLE_EMAIL_BACKEND:
+        logger.warning('Contract notification skipped because console email backend does not send real email.')
         return False
 
     subject, message = build_contract_email(contract)

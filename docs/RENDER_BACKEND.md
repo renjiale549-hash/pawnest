@@ -134,6 +134,18 @@ SEND_CUSTOMER_ORDER_EMAIL=true
 
 Do not put real SMTP passwords in GitHub code.
 
+For Gmail:
+
+- `EMAIL_HOST_USER` is the Gmail address that sends the notification.
+- `EMAIL_HOST_PASSWORD` must be a Gmail app password, not the normal Gmail login password.
+- `CONTRACT_NOTIFICATION_EMAIL` is the mailbox that receives inquiry notifications. It can be the same Gmail address.
+
+After saving these variables, Render redeploys the service. Submit a new inquiry from GitHub Pages and check:
+
+- The API response should include `email_sent: true`.
+- The inquiry should appear in Django Admin.
+- The notification email should arrive in `CONTRACT_NOTIFICATION_EMAIL`.
+
 ## Free Tier Notes
 
 Free services can sleep when idle, so the first request may be slow. This is acceptable for early testing, but not ideal for a production store.

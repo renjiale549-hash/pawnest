@@ -17,6 +17,7 @@ django.core.mail.backends.console.EmailBackend
 ```
 
 This means local submissions will print the email content in the Django server terminal instead of sending a real email.
+For inquiry notifications, the API reports `email_sent: false` while this console backend is active, because no real email leaves the server.
 
 ## Real SMTP Sending
 
@@ -56,6 +57,8 @@ You can test SMTP without submitting the website form:
 ```powershell
 .\.venv\Scripts\python.exe manage.py send_test_inquiry_email
 ```
+
+This command only succeeds when a real sending backend, or a test email backend, is configured. With the default console backend, it intentionally fails because no real email is delivered.
 
 ## Behavior
 

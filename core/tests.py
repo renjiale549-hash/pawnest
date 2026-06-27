@@ -149,6 +149,30 @@ class ApiTests(TestCase):
         self.assertFalse(response.json()['email_sent'])
 
     @override_settings(
+        EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend',
+        CONTRACT_NOTIFICATION_EMAIL='renjiale549@gmail.com',
+    )
+    def test_contract_submission_console_backend_is_not_marked_sent(self):
+        response = self.client.post(
+            '/api/contracts/',
+            data=json.dumps(
+                {
+                    'name': 'Mia',
+                    'email': 'mia@example.com',
+                    'phone': '+1 555 000 0000',
+                    'country': 'United States',
+                    'interested_products': 'Pino Feeder Set',
+                    'message': 'Need a feeding set sample.',
+                }
+            ),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(Contract.objects.count(), 1)
+        self.assertFalse(response.json()['email_sent'])
+
+    @override_settings(
         EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
         ORDER_NOTIFICATION_EMAIL='orders@example.com',
         SEND_CUSTOMER_ORDER_EMAIL=True,

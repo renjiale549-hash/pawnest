@@ -590,3 +590,32 @@ Testing:
 Next step:
 
 - Wait for Render to redeploy, then refresh Django Admin and reopen the product, inquiry, or order list tabs.
+
+### 2026-06-28 Inquiry SMTP delivery preparation
+
+Files changed:
+
+- `core/views.py`
+- `core/management/commands/send_test_inquiry_email.py`
+- `core/tests.py`
+- `docs/EMAIL_SETUP.md`
+- `docs/RENDER_BACKEND.md`
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Inquiry notifications no longer report `email_sent=true` when the console email backend is active, because console output is not real email delivery.
+- Updated the inquiry test email command to use the current inquiry fields.
+- Added a regression test for console email backend behavior.
+- Clarified Render SMTP environment variables and Gmail app-password requirements.
+
+Testing:
+
+- Ran `.venv\Scripts\python.exe manage.py check`; Django reported no issues.
+- Ran `.venv\Scripts\python.exe manage.py test core`; all 12 tests passed.
+- Ran `send_test_inquiry_email` with the default console backend and confirmed it fails intentionally because no real email is sent.
+- Ran `send_test_inquiry_email` with the locmem test backend and confirmed the command succeeds.
+
+Next step:
+
+- Configure Render `pawnest-api` environment variables for real SMTP, then submit a live inquiry and confirm the notification arrives in the receiving mailbox.
