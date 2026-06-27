@@ -458,3 +458,27 @@ Testing:
 Next step:
 
 - In Render `pawnest-api` Environment, add `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL`, and `DJANGO_SUPERUSER_PASSWORD`, save changes, wait for redeploy, then log in to `/admin/`.
+
+### 2026-06-28 Live inquiry and order smoke test
+
+Files changed:
+
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Submitted one live inquiry to the Render backend.
+- Submitted one live order to the Render backend.
+- Confirmed Django Admin inquiry and order list routes are online and redirect to login when unauthenticated.
+
+Testing:
+
+- `GET https://pawnest-api.onrender.com/api/products/` returned HTTP 200 with `pino-feeder-set`.
+- `POST https://pawnest-api.onrender.com/api/contracts/` returned `id=1` and `email_sent=true`.
+- `POST https://pawnest-api.onrender.com/api/orders/` returned `id=1`, `order_number=PN202606280001`, and `email_sent=true`.
+- `GET https://pawnest-api.onrender.com/admin/core/contract/` returned HTTP 302 to Admin login.
+- `GET https://pawnest-api.onrender.com/admin/core/order/` returned HTTP 302 to Admin login.
+
+Next step:
+
+- Log in to Django Admin and confirm the records named `Codex Live Inquiry Test` and `Codex Live Order Test` are visible in the inquiry and order lists.
