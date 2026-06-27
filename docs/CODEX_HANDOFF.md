@@ -648,3 +648,23 @@ Testing:
 Next step:
 
 - Create a Resend API key, add the Render environment variables from `docs/RESEND_SETUP.md`, deploy, then submit a live inquiry and confirm `email_sent=true`.
+
+### 2026-06-28 Resend live email verification
+
+Files changed:
+
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Verified Render production can send inquiry notifications through Resend API.
+
+Testing:
+
+- Submitted live inquiry `Resend Live Test` to `https://pawnest-api.onrender.com/api/contracts/`.
+- API returned `id=6` and `email_sent=true`.
+- Verified `https://pawnest-api.onrender.com/api/products/` still returns HTTP 200.
+
+Next step:
+
+- Check `renjiale549@gmail.com` inbox and spam folder for the `New PawNest inquiry: Resend Live Test` email.
