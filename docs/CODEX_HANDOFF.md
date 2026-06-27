@@ -413,3 +413,25 @@ Testing:
 Next step:
 
 - Refresh the Render Blueprint page and create the Blueprint again with `Blueprint Name` set to `pawnest`, `Branch` set to `main`, and `Blueprint Path` left blank or set to `render.yaml`.
+
+### 2026-06-27 GitHub Pages connected to Render API
+
+Files changed:
+
+- `docs/CODEX_HANDOFF.md`
+
+Implemented:
+
+- Triggered a GitHub Pages redeploy after the repository Actions variable `VITE_API_BASE_URL` was set to `https://pawnest-api.onrender.com`.
+- Confirmed the published GitHub Pages JavaScript bundle contains the Render backend URL.
+- Confirmed the live Render product API is reachable from the public internet.
+
+Testing:
+
+- Verified `https://pawnest-api.onrender.com/api/products/` returns HTTP 200 and includes the expected product data.
+- Verified `https://renjiale549-hash.github.io/pawnest/` loads a JavaScript bundle containing `https://pawnest-api.onrender.com`.
+- Confirmed the latest GitHub Actions frontend deployment and Pages deployment completed successfully.
+
+Next step:
+
+- Create a Django superuser on Render, then submit one live inquiry and one live order from GitHub Pages and confirm both appear in Django Admin.
